@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RTO Portal</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Styles for the beautiful and enthusiastic RTO Upload Form */
+        .form-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .form-header h2 {
+            font-size: 2em;
+            font-weight: 700;
+            color: #003366;
+            margin-bottom: 0.75rem;
+        }
+
+        .form-header p {
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+            color: #5a6872;
+            font-size: 1.05em;
+            line-height: 1.6;
+        }
+
+        .rto-matrix-form .form-section {
+            background-color: #ffffff;
+            border: 1px solid #dee2e6;
+            border-radius: 12px;
+            padding: 2rem 2.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        
+        .rto-matrix-form .form-section:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+        }
+
+        .rto-matrix-form .form-section h3 {
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+            color: #005587;
+            border-bottom: 3px solid;
+            border-image-slice: 1;
+            border-image-source: linear-gradient(to right, #005587, #00a3e0);
+            padding-bottom: 0.6rem;
+            display: inline-block;
+            font-size: 1.5em;
+        }
+
+        .rto-matrix-form .section-description {
+            color: #6c757d;
+            font-size: 0.95em;
+            margin-top: 0;
+            margin-bottom: 2rem;
+        }
+
+        .form-group-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem 2rem;
+        }
+
+        .form-group-grid .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group-grid .form-group label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #343a40;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+
+        .status-upload-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .status-upload-table th,
+        .status-upload-table td {
+            text-align: left;
+            padding: 14px 18px;
+            border-bottom: 1px solid #e9ecef;
+            vertical-align: middle;
+        }
+
+        .status-upload-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #343a40;
+            white-space: nowrap;
+            border-top: none;
+            border-bottom-width: 2px;
+            border-bottom-color: #dee2e6;
+        }
+        
+        .status-upload-table tbody tr:nth-child(even) {
+            background-color: #fdfdfd;
+        }
+
+        .status-upload-table tbody tr:hover {
+            background-color: #e9f5ff;
+        }
+        
+        .status-upload-table td:first-child {
+            font-weight: 500;
+            color: #495057;
+        }
+
+        .status-upload-table input[type="number"] {
+            width: 80px;
+            text-align: center;
+        }
+
+        .status-upload-table input[type="number"]:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+            outline: none;
+        }
+
+        .form-actions {
+            text-align: center; /* Fallback */
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .form-actions .status-message {
+            width: 100%;
+            text-align: center;
+            margin-top: 1rem;
+            order: 2; /* Ensure it appears below buttons */
+        }
+
+        .form-button {
+            padding: 14px 35px;
+            font-size: 1.1em;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .form-button.primary {
+            color: white;
+            background-image: linear-gradient(45deg, #005587 0%, #00a3e0 100%);
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
+        }
+
+        .form-button.primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(0, 123, 255, 0.3);
+        }
+        
+        .form-button.primary:active {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
+        }
+
+        .form-button.secondary {
+            background-color: #f1f3f5;
+            color: #495057;
+            border: 1px solid #dee2e6;
+        }
+
+        .form-button.secondary:hover {
+            background-color: #e9ecef;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+
+        .form-button.danger {
+            color: white;
+            background-image: linear-gradient(45deg, #dc3545 0%, #c82333 100%);
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.2);
+        }
+
+        .form-button.danger:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(220, 53, 69, 0.3);
+        }
+
+        .action-button.secondary {
+            background-color: #fff;
+            color: #005587;
+            border: 1px solid #cce7ff;
+            padding: 8px 16px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .action-button.secondary:hover {
+            background-color: #f0f8ff;
+            border-color: #007bff;
+            color: #003366;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 85, 135, 0.1);
+        }
+
+        .action-button.secondary:disabled {
+            background-color: #f8f9fa;
+            color: #6c757d;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Align the 'Actions' column in the user management table */
+        #user-list-table .actions-header,
+        #user-list-table .actions-cell {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        #user-list-table .actions-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Header adjustments for logo and title */
+        #logo {
+            height: 35px; /* Further reduced logo size */
+            width: auto;
+            margin-right: 18px; /* Add more space between logo and title */
+        }
+
+        .header-title-container h1 {
+            font-size: 2.1em; /* Made title even larger */
+            font-weight: 700; /* Bolder font weight */
+            color: #003366; /* Slightly darker, richer blue */
+            margin-bottom: 0;
+            line-height: 1;
+            letter-spacing: -1px; /* Tighter letter spacing for a modern look */
+            text-shadow: 0 1px 2px rgba(0,0,0,0.05); /* Subtle shadow for depth */
+        }
+
+        /* Confirmation Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-overlay:not(.hidden) {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            width: 90%;
+            max-width: 500px;
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay:not(.hidden) .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.6em;
+            color: #003366;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #6c757d;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: #343a40;
+        }
+
+        .modal-body p {
+            font-size: 1.05em;
+            line-height: 1.6;
+            color: #495057;
+            margin-bottom: 1.5rem;
+        }
+
+        .summary-preview {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+        }
+
+        .summary-preview h4 {
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+            color: #005587;
+            font-size: 1.1em;
+        }
+
+        .summary-preview p {
+            margin: 0.5rem 0;
+            font-size: 1em;
+        }
+
+        .modal-footer {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        .modal-button {
+            padding: 12px 25px;
+            font-size: 1em;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-button.cancel {
+            background-color: #f1f3f5;
+            color: #495057;
+            border: 1px solid #dee2e6;
+        }
+
+        .modal-button.cancel:hover {
+            background-color: #e9ecef;
+        }
+
+        .modal-button.confirm {
+            color: white;
+            background-image: linear-gradient(45deg, #28a745 0%, #218838 100%);
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
+        }
+
+        .modal-button.confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+        }
+
+        .modal-button.danger {
+            color: white;
+            background-image: linear-gradient(45deg, #dc3545 0%, #c82333 100%);
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.2);
+        }
+
+        .modal-button.danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.3);
+        }
+
+        /* Global Loader Styles */
+        #global-loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999; /* Highest z-index */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+            backdrop-filter: blur(4px);
+        }
+
+        #global-loader-overlay.is-active {
+            opacity: 1;
+            visibility: visible;
+            transition-delay: 0s;
+        }
+
+        /* Re-usable spinner component styles */
+        .spinner-container {
+            text-align: center;
+            color: #005587;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: inline-block;
+            border-top: 4px solid #005587;
+            border-right: 4px solid transparent;
+            box-sizing: border-box;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+        
+        .spinner-text {
+            font-weight: 500;
+            font-size: 1.1em;
+            margin: 0;
+            letter-spacing: 0.5px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Chart with center text styles */
+        .chart-container {
+            position: relative;
+            margin: 1rem auto 0;
+            width: 180px;
+            height: 180px;
+        }
+
+        #chart-center-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            pointer-events: none;
+        }
+
+        #chart-total-pending {
+            display: block;
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #003366;
+            line-height: 1;
+        }
+
+        .chart-total-label {
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+
+        @keyframes spin-animation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Sticky Footer Layout & Styles */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main {
+            flex-grow: 1; /* Allows main content to expand and push footer down */
+        }
+
+        footer {
+            background-color: #f8f9fa;
+            color: #6c757d;
+            text-align: center;
+            padding: 0.75rem 1rem; /* Reduced padding */
+            font-size: 0.85em; /* Smaller font size */
+            border-top: 1px solid #dee2e6;
+            flex-shrink: 0; /* Prevent footer from shrinking */
+        }
+        footer p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Global Loader -->
+    <div id="global-loader-overlay">
+        <div class="spinner-container">
+            <div class="spinner"></div>
+            <p class="spinner-text">Loading...</p>
+        </div>
+    </div>
+
+    <header>
+        <div class="header-left">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/4/43/Cognizant_logo_2022.svg" alt="Cognizant Logo" id="logo">
+            <div class="header-title-container">
+                <h1>RTO Tracking Portal</h1>
+                <span class="tagline">Driving Productivity, Together.</span>
+            </div>
+        </div>
+        <div id="profile-menu" class="header-right">
+            <div id="profile-icon" title="Profile and settings">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            </div>
+            <div id="profile-dropdown">
+                <p id="welcome-message"></p>
+                <button id="my-profile-button" class="dropdown-item" data-target="profile-container">My Profile</button>
+                <button id="logout-button" class="dropdown-item">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <nav id="main-nav">
+        <ul class="nav-menu">
+            <!-- Admin Menu Items -->
+            <li class="nav-item" data-role="admin" data-target="user-management-container">User Management & Registration</li>
+            <!-- Manager/Engineer/DL Menu Items -->
+            <li class="nav-item" data-role="manager engineer dl" data-target="dashboard-container">RTO Dashboard</li>
+            <!-- Manager Only Menu Items -->
+            <li class="nav-item" data-role="manager" data-target="rto-history-container">Upload History</li>
+            <li class="nav-item" data-role="manager" data-target="dl-creation-container">Create DL Account</li>
+            <!-- Special DL User Menu Item -->
+            <li id="nav-rto-upload" class="nav-item" data-role="dl" data-target="rto-status-upload-container">Upload RTO Status</li>
+        </ul>
+    </nav>
+
+    <main>
+        <div id="content-panels">
+            <div id="dashboard-container" class="content-panel hidden" data-role="manager engineer dl">
+                <div class="dashboard-header">
+                    <div>
+                        <h2>RTO Status Dashboard</h2>
+                        <p id="rto-status-display-meta" class="meta-info"></p>
+                    </div>
+                    <button id="refresh-dashboard-button" class="action-button secondary" title="Refresh dashboard data">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+                            <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+                        </svg>
+                        <span class="button-text">Refresh</span>
+                    </button>
+                </div>
+                <div id="rto-status-display-container" class="hidden dashboard-grid" data-role="manager engineer dl">
+                    <div class="dashboard-card">
+                        <h4>Pending Actions Summary</h4>
+                        <div class="summary-container">
+                            <table id="rto-pending-actions-summary-table" class="status-display-table">
+                                <thead>
+                                    <tr>
+                                        <th>Status</th>
+                                        <th>Count</th>
+                                        <th>Percentage</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="rto-pending-actions-summary-body"></tbody>
+                                <tbody id="rto-pending-actions-summary-skeleton" class="hidden"></tbody>
+                            </table>
+                            <div class="chart-container">
+                                <canvas id="pending-actions-chart"></canvas>
+                                <div id="chart-center-text">
+                                    <span id="chart-total-pending" class="chart-total-value"></span>
+                                    <span class="chart-total-label">Total Pending</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h4>Overall Status Counts</h4>
+                        <table id="rto-summary-display-table" class="status-display-table">
+                            <tbody id="rto-summary-display-body"></tbody>
+                            <tbody id="rto-summary-display-skeleton" class="hidden"></tbody>
+                        </table>
+                    </div>
+                    <div class="dashboard-card full-width">
+                        <h4>Aged Request Details</h4>
+                        <p class="card-subtitle">Count of pending requests based on their age.</p>
+                        <table id="rto-status-display-table" class="status-display-table">
+                            <thead>
+                                <tr>
+                                    <th>Row Labels</th>
+                                    <th>With in 2 Weeks</th>
+                                    <th>3 Weeks</th>
+                                    <th>4 Weeks</th>
+                                    <th>1.5 - 2 Month</th>
+                                    <th>2 - 2.5 Month</th>
+                                    <th>Grand Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rto-status-display-body"></tbody>
+                            <tbody id="rto-status-display-skeleton" class="hidden"></tbody>
+                            <tfoot id="rto-status-display-foot"></tfoot>
+                        </table>
+                    </div>
+                </div>
+                <p id="rto-status-display-status" class="status-message"></p>
+            </div>
+            <!-- RTO Status History -->
+            <div id="rto-history-container" class="content-panel hidden" data-role="manager">
+                <div class="dashboard-card full-width">
+                    <h2>RTO Status Upload History</h2>
+                    <table id="rto-history-table" class="status-display-table">
+                        <thead>
+                            <tr>
+                                <th>Upload Date</th>
+                                <th>Uploaded By</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rto-history-body"></tbody>
+                    </table>
+                    <div id="rto-history-pagination" class="pagination-controls">
+                        <button id="history-prev-button" class="action-button" disabled>&laquo; Previous</button>
+                        <span id="history-page-info"></span>
+                        <button id="history-next-button" class="action-button" disabled>Next &raquo;</button>
+                    </div>
+                    <p id="rto-history-status"></p>
+                </div>
+            </div>
+
+            <!-- User Profile Page -->
+            <div id="profile-container" class="content-panel hidden" data-role="admin manager engineer dl">
+                <div class="dashboard-card">
+                    <h2>My Profile</h2>
+                    <form id="change-password-form" class="compact-form">
+                        <h3>Change Password</h3>
+                        <div class="form-group">
+                            <label for="current-password">Current Password</label>
+                            <input type="password" id="current-password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="profile-new-password">New Password</label>
+                            <input type="password" id="profile-new-password" required minlength="6">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirm-password">Confirm New Password</label>
+                            <input type="password" id="confirm-password" required minlength="6">
+                        </div>
+                        <button type="submit">Change Password</button>
+                    </form>
+                    <p id="change-password-status" class="status-message"></p>
+                </div>
+            </div>
+            <!-- Admin-only User Management Table -->
+            <div id="user-management-container" class="content-panel hidden" data-role="admin">
+                <div class="user-management-header">
+                    <h2>User Management</h2>
+                    <button id="add-user-toggle-button" class="action-button">Add New User</button>
+                </div>
+
+                <div class="user-management-layout">
+                    <!-- Registration Form (collapsible) -->
+                    <div id="user-registration-section" class="dashboard-card is-collapsed">
+                        <h3>Register New User</h3>
+                        <form id="registration-form">
+                            <input type="text" id="reg-emp-id" placeholder="Emp ID" required>
+                            <input type="text" id="reg-emp-name" placeholder="Emp Name" required>
+                            <div class="email-input-group">
+                                <input type="text" id="reg-email-prefix" placeholder="Emp Email ID" required>
+                                <span>@cognizant.com</span>
+                            </div>
+                            <input type="password" id="reg-password" placeholder="Password" required>
+                            <select id="reg-role" required>
+                                <option value="" disabled selected>Select a role</option>
+                                <option value="engineer">Engineer</option>
+                                <option value="manager">Manager</option>
+                            </select>
+                            <button type="submit">Create User</button>
+                        </form>
+                        <p id="registration-status" class="status-message"></p>
+                    </div>
+
+                    <!-- User List -->
+                    <div id="user-list-section" class="dashboard-card">
+                        <div class="table-controls">
+                            <input type="text" id="user-search-input" placeholder="Search users...">
+                            <button id="export-users-csv-button" class="action-button">Export to CSV</button>
+                        </div>
+                        <div class="table-wrapper">
+                            <table id="user-list-table">
+                                <thead>
+                                    <tr>
+                                        <th class="sortable" data-sort-by="username">User/Emp ID</th>
+                                        <th class="sortable" data-sort-by="name">Name</th>
+                                        <th class="sortable" data-sort-by="email">Email</th>
+                                        <th class="sortable" data-sort-by="role">Role</th>
+                                        <th class="sortable" data-sort-by="dlOwner">DL Owner</th>
+                                        <th class="actions-header">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="user-list-body"></tbody>
+                                <tbody id="user-list-skeleton" class="hidden"></tbody>
+                            </table>
+                        </div>
+                        <p id="user-list-status"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Manager-only DL Creation Form -->
+            <div id="dl-creation-container" class="content-panel hidden" data-role="manager">
+                <div class="dashboard-card">
+                    <h2>Create New DL Account</h2>
+                    <form id="dl-creation-form" class="compact-form">
+                        <div class="email-input-group">
+                            <input type="text" id="dl-email-prefix" placeholder="DL Email ID (e.g., RTOPMO)" required>
+                            <span>@cognizant.com</span>
+                        </div>
+                        <input type="password" id="dl-password" placeholder="Password" required>
+                        <button type="submit">Create DL</button>
+                    </form>
+                    <p id="dl-creation-status" class="status-message"></p>
+                </div>
+            </div>
+
+            <!-- RTO Status Upload Form (for specific DL user) -->
+            <div id="rto-status-upload-container" class="content-panel hidden">
+                <div class="dashboard-card">
+                    <div class="form-header">
+                        <h2>Upload RTO Request Status</h2>
+                        <p>Enter the latest counts for overall status and aged requests. This data will update the main dashboard for all users.</p>
+                    </div>
+                    <form id="rto-status-upload-form" class="rto-matrix-form">
+                        <div class="form-section">
+                            <h3>Overall Status Counts</h3>
+                            <p class="section-description">A summary of all requests by their current status.</p>
+                            <div class="form-group-grid">
+                                <div class="form-group">
+                                    <label for="summary-completed">Completed</label>
+                                    <input type="number" id="summary-completed" name="summary.completed" required min="0" value="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="summary-pending-vlan">Pending with Project POC(VLAN Request Yet to raise)</label>
+                                    <input type="number" id="summary-pending-vlan" name="summary.pendingVlan" required min="0" value="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="summary-pending-myaccess">Pending with Project POC(MYAccess Yet to raise)</label>
+                                    <input type="number" id="summary-pending-myaccess" name="summary.pendingMyAccess" required min="0" value="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="summary-pending-uat">Pending with Business for UAT</label>
+                                    <input type="number" id="summary-pending-uat" name="summary.pendingUat" required min="0" value="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="summary-pending-myaccess-edp">Pending with POC(MYAccess-EDP pending)</label>
+                                    <input type="number" id="summary-pending-myaccess-edp" name="summary.pendingMyAccessEdp" required min="0" value="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="summary-pending-myaccess-pm">Pending with POC(MYAccess-PM pending)</label>
+                                    <input type="number" id="summary-pending-myaccess-pm" name="summary.pendingMyAccessPm" required min="0" value="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="summary-vlan-progress">VLAN request in progress</label>
+                                    <input type="number" id="summary-vlan-progress" name="summary.vlanInProgress" required min="0" value="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="summary-uat-troubleshooting">Business UAT Testing Troubleshooting in progress</label>
+                                    <input type="number" id="summary-uat-troubleshooting" name="summary.businessUatTroubleshooting" required min="0" value="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="summary-firewall-progress">Firewall request in progress</label>
+                                    <input type="number" id="summary-firewall-progress" name="summary.firewallInProgress" required min="0" value="0">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-section">
+                            <h3>Aged Request Details</h3>
+                            <p class="section-description">A breakdown of pending requests by how long they have been open.</p>
+                            <div class="table-wrapper">
+                                <table class="status-upload-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Row Labels</th>
+                                            <th>With in 2 Weeks</th>
+                                            <th>3 Weeks</th>
+                                            <th>4 Weeks</th>
+                                            <th>1.5 - 2 Month</th>
+                                            <th>2 - 2.5 Month</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Pending with Project POC(VLAN Request Yet to raise)</td>
+                                            <td><input type="number" name="pendingVlan.within2Weeks" min="0" value="0" required></td>
+                                            <td><input type="number" name="pendingVlan.c3weeks" min="0" value="0" required></td>
+                                            <td><input type="number" name="pendingVlan.c4weeks" min="0" value="0" required></td>
+                                            <td><input type="number" name="pendingVlan.c1_5to2months" min="0" value="0" required></td>
+                                            <td><input type="number" name="pendingVlan.c2to2_5months" min="0" value="0" required></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Pending with Project POC(MYAccess Yet to raise)</td>
+                                            <td><input type="number" name="pendingMyAccess.within2Weeks" min="0" value="0" required></td>
+                                            <td><input type="number" name="pendingMyAccess.c3weeks" min="0" value="0" required></td>
+                                            <td><input type="number" name="pendingMyAccess.c4weeks" min="0" value="0" required></td>
+                                            <td><input type="number" name="pendingMyAccess.c1_5to2months" min="0" value="0" required></td>
+                                            <td><input type="number" name="pendingMyAccess.c2to2_5months" min="0" value="0" required></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Pending with Business for UAT</td>
+                                            <td><input type="number" name="pendingUat.within2Weeks" min="0" value="0" required></td>
+                                            <td><input type="number" name="pendingUat.c3weeks" min="0" value="0" required></td>
+                                            <td><input type="number" name="pendingUat.c4weeks" min="0" value="0" required></td>
+                                            <td><input type="number" name="pendingUat.c1_5to2months" min="0" value="0" required></td>
+                                            <td><input type="number" name="pendingUat.c2to2_5months" min="0" value="0" required></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Pending with POC(MYAccess-EDP pending)</td>
+                                            <td><input type="number" name="pendingMyAccessEdp.within2Weeks" min="0" value="0" required></td>
+                                            <td><input type="number" name="pendingMyAccessEdp.c3weeks" min="0" value="0" required></td>
+                                            <td><input type="number" name="pendingMyAccessEdp.c4weeks" min="0" value="0" required></td>
+                                            <td><input type="number" name="pendingMyAccessEdp.c1_5to2months" min="0" value="0" required></td>
+                                            <td><input type="number" name="pendingMyAccessEdp.c2to2_5months" min="0" value="0" required></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Pending with POC(MYAccess-PM pending)</td>
+                                            <td><input type="number" name="pendingMyAccessPm.within2Weeks" min="0" value="0" required></td>
+                                            <td><input type="number" name="pendingMyAccessPm.c3weeks" min="0" value="0" required></td>
+                                            <td><input type="number" name="pendingMyAccessPm.c4weeks" min="0" value="0" required></td>
+                                            <td><input type="number" name="pendingMyAccessPm.c1_5to2months" min="0" value="0" required></td>
+                                            <td><input type="number" name="pendingMyAccessPm.c2to2_5months" min="0" value="0" required></td>
+                                        </tr>
+                                        <tr>
+                                            <td>VLAN request in progress</td>
+                                            <td><input type="number" name="vlanInProgress.within2Weeks" min="0" value="0" required></td>
+                                            <td><input type="number" name="vlanInProgress.c3weeks" min="0" value="0" required></td>
+                                            <td><input type="number" name="vlanInProgress.c4weeks" min="0" value="0" required></td>
+                                            <td><input type="number" name="vlanInProgress.c1_5to2months" min="0" value="0" required></td>
+                                            <td><input type="number" name="vlanInProgress.c2to2_5months" min="0" value="0" required></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Business UAT Testing Troubleshooting in progress</td>
+                                            <td><input type="number" name="businessUatTroubleshooting.within2Weeks" min="0" value="0" required></td>
+                                            <td><input type="number" name="businessUatTroubleshooting.c3weeks" min="0" value="0" required></td>
+                                            <td><input type="number" name="businessUatTroubleshooting.c4weeks" min="0" value="0" required></td>
+                                            <td><input type="number" name="businessUatTroubleshooting.c1_5to2months" min="0" value="0" required></td>
+                                            <td><input type="number" name="businessUatTroubleshooting.c2to2_5months" min="0" value="0" required></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Firewall request in progress</td>
+                                            <td><input type="number" name="firewallInProgress.within2Weeks" min="0" value="0" required></td>
+                                            <td><input type="number" name="firewallInProgress.c3weeks" min="0" value="0" required></td>
+                                            <td><input type="number" name="firewallInProgress.c4weeks" min="0" value="0" required></td>
+                                            <td><input type="number" name="firewallInProgress.c1_5to2months" min="0" value="0" required></td>
+                                            <td><input type="number" name="firewallInProgress.c2to2_5months" min="0" value="0" required></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" id="reset-form-button" class="form-button danger">Reset Form</button>
+                            <button type="submit" class="form-button primary">Upload Status</button>
+                            <p id="rto-status-upload-status" class="status-message"></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2025 Cognizant. All Rights Reserved.</p>
+    </footer>
+
+    <!-- Global Popup Notification -->
+    <div id="global-popup"></div>
+
+    <!-- Confirmation Modal -->
+    <div id="upload-confirmation-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirm Upload</h3>
+                <button id="modal-close-button" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to upload this RTO status data? This will update the dashboard for all users.</p>
+                <div class="summary-preview">
+                    <h4>Quick Summary</h4>
+                    <p><strong>Total Completed:</strong> <span id="confirm-completed"></span></p>
+                    <p><strong>Total Pending:</strong> <span id="confirm-pending"></span></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="modal-cancel-button" class="modal-button cancel">Cancel</button>
+                <button id="modal-confirm-button" class="modal-button confirm">Upload Data</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reset Confirmation Modal -->
+    <div id="reset-confirmation-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirm Reset</h3>
+                <button id="reset-modal-close-button" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to reset the form? All entered data will be cleared and cannot be recovered.</p>
+            </div>
+            <div class="modal-footer">
+                <button id="reset-modal-cancel-button" class="modal-button cancel">Cancel</button>
+                <button id="reset-modal-confirm-button" class="modal-button danger">Confirm Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js?v=1.9"></script>
+</body>
+</html>

@@ -1,0 +1,1043 @@
+/* --- General & Typography --- */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #e6f7ff; /* Light blue, matching the header */
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+h1, h2, h3, h4 {
+    color: #0d2240; /* A darker blue for headings */
+    font-weight: 600;
+}
+
+header {
+    /* A lighter blue inspired by the Cognizant logo */
+    background-color: #e6f7ff; /* Light blue, matching the header */
+    color: #0d2240; /* Dark blue for text for contrast */
+    padding: 0.8rem 2rem; 
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px; 
+    /* A subtle bottom border to separate from content */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    position: sticky; /* Make header stick to top for better UX */
+    top: 0;
+    z-index: 900; /* Ensure it's above other content but below modals */
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+#logo {
+    height: 40px;
+    /* Add transition for smooth animation on hover */
+    transition: transform 0.3s ease-in-out;
+}
+
+#logo:hover {
+    /* Make the logo slightly larger on hover for an enthusiastic feel */
+    transform: scale(1.1);
+}
+
+.header-title-container {
+    display: flex;
+    flex-direction: column;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.6rem; /* Slightly smaller to accommodate tagline */
+    font-weight: 600;
+    color: #0033a0; /* Use Cognizant's primary dark blue for the title */
+    text-shadow: none;
+    line-height: 1.1;
+}
+
+.tagline {
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: #5a6268; /* A standard secondary text color */
+    margin-top: 2px;
+}
+
+/* --- Main Layout --- */
+main {
+    flex: 1;
+    max-width: 1400px; /* Wider for a more dashboard-like feel */
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0 auto 20px;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+/* --- Dashboard & Layout --- */
+.hidden {
+    display: none;
+}
+
+/* --- Login Page Background --- */
+.login-page-body {
+    background-image: url('https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?q=80&w=2940&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden; /* Prevent scrollbars from animation */
+}
+
+/* --- Login Page Specifics --- */
+#login-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1; /* Takes up remaining space */
+    padding: 20px;
+}
+
+.login-card {
+    background: #ffffff;
+    padding: 2.5rem 3rem;
+    border-radius: 8px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+    border: none;
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+    animation: fadeIn 0.6s 0.2s ease-out forwards;
+    opacity: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.login-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, #00a9e0, #005587);
+}
+
+.login-logo {
+    height: 40px;
+    margin-bottom: 1.5rem;
+}
+
+.login-card h2 {
+    margin-top: 0;
+    margin-bottom: 2.5rem;
+    font-size: 1.5rem;
+    color: #333;
+    font-weight: 500;
+}
+
+#login-form {
+    margin-top: 0;
+}
+
+#login-form input {
+    margin-bottom: 1.5rem;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid #dde2e7;
+    color: #333;
+    border-radius: 0;
+    padding: 10px 5px;
+    font-size: 1.1rem;
+    transition: border-color 0.3s;
+}
+
+#login-form input::placeholder {
+    color: #999;
+}
+
+#login-form input:focus {
+    background: transparent;
+    border-color: #00a9e0;
+    box-shadow: none;
+    outline: none;
+}
+
+#login-form button {
+    width: 100%;
+    padding: 14px;
+    border-radius: 50px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: linear-gradient(90deg, #00a9e0, #0076b6);
+    border: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#login-form button:hover {
+    background: linear-gradient(90deg, #00a9e0, #0076b6);
+    box-shadow: 0 7px 20px rgba(0, 169, 224, 0.4);
+    transform: translateY(-2px);
+}
+
+/* --- Containers & Sections --- */
+.dashboard-card {
+    height: 100%;
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    position: relative; /* Establish a stacking context for all cards */
+    z-index: 1;         /* Set a default stacking order */
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    z-index: 10; /* Bring the hovered card to the front */
+}
+
+.dashboard-card h2, .dashboard-card h4 {
+    margin-top: 0;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #e9ecef;
+    margin-bottom: 1.5rem;
+    color: #0033a0; /* Cognizant Blue for titles */
+}
+.dashboard-card > .card-subtitle {
+    font-size: 0.95rem;
+    color: #6c757d;
+    margin-top: -1.25rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+/* --- Forms --- */
+form {
+    margin-top: 1.5em;
+}
+
+form input, form select {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+form input:focus, form select:focus {
+    outline: none;
+    border-color: #0033a0;
+    box-shadow: 0 0 0 2px rgba(0, 51, 160, 0.2);
+}
+
+.email-input-group {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    background-color: #fff;
+    transition: border-color 0.2s;
+}
+
+.email-input-group:focus-within {
+    border-color: #0033a0;
+    box-shadow: 0 0 0 2px rgba(0, 51, 160, 0.2);
+}
+
+.email-input-group input {
+    border: none;
+    margin-bottom: 0;
+    flex-grow: 1;
+    box-shadow: none;
+}
+
+.email-input-group span {
+    padding: 10px;
+    color: #777;
+    background-color: #f7f7f7;
+    border-left: 1px solid #ccc;
+}
+
+.form-group-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem 2rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #555;
+}
+
+.compact-form {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 0.5em; /* Reduce top margin for a tighter look */
+}
+
+.compact-form > .email-input-group,
+.compact-form > input[type="password"] {
+    margin-bottom: 0;
+}
+
+.compact-form > .email-input-group {
+    flex: 2 1 250px; /* Allow growing and shrinking */
+}
+
+.compact-form > input[type="password"] {
+    flex: 1 1 180px; /* Allow growing and shrinking */
+}
+
+.compact-form > button {
+    flex-shrink: 0; /* Prevent button from shrinking */
+    margin: 0;
+}
+
+/* --- Buttons --- */
+button, .action-button {
+    padding: 12px 24px;
+    border: none;
+    background-color: #0033a0; /* Cognizant Blue */
+    color: #fff;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: background-color 0.2s, transform 0.1s;
+    display: inline-block;
+    margin: 10px 0;
+}
+
+button:hover, .action-button:hover {
+    background-color: #002269; /* Darker blue */
+}
+
+button:active, .action-button:active {
+    transform: translateY(1px);
+}
+
+#logout-button {
+    background-color: #6c757d; /* Grey for secondary actions */
+}
+#logout-button:hover {
+    background-color: #5a6268;
+}
+
+.meta-info {
+    font-style: italic;
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0;
+    white-space: nowrap; /* Prevents the text from wrapping on small screens */
+}
+
+/* --- Main Navigation Bar --- */
+#main-nav {
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    padding: 0 2rem;
+    border-top: 1px solid #e0e0e0;
+    position: sticky;
+    top: 78px; /* Height of header */
+    z-index: 899; /* Below header */
+}
+
+.nav-menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.nav-item {
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    font-weight: 500;
+    color: #343a40;
+    border-bottom: 4px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.nav-item:hover {
+    color: #0033a0;
+}
+
+.nav-item.active {
+    color: #0033a0;
+    border-bottom-color: #0033a0;
+}
+
+#content-panels {
+    padding: 2rem;
+}
+
+/* --- Dashboard Grid Layout --- */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 2rem;
+}
+
+.dashboard-card.full-width {
+    grid-column: 1 / -1; /* Span all columns */
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* --- Summary & Chart Layout --- */
+.summary-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.summary-container > table {
+    flex: 1 1 400px; /* Flex properties for responsiveness */
+}
+
+.chart-container {
+    flex: 1 1 300px; /* Flex properties for responsiveness */
+    max-width: 350px;
+    min-height: 300px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.dashboard-header h2 {
+    margin: 0;
+    font-size: 1.8rem;
+}
+/* --- Tables --- */
+.aging-cell {
+    font-weight: 600;
+    font-size: 1em;
+    transition: background-color 0.2s;
+    border-radius: 4px;
+}
+
+.aging-cell:hover {
+    background-color: #e9ecef;
+}
+
+#rto-status-display-table {
+    border: none; /* Remove outer border for a cleaner look within the card */
+    border-spacing: 0;
+    table-layout: fixed;
+}
+
+#rto-status-display-table th,
+#rto-status-display-table td {
+    padding: 8px 12px;
+    white-space: nowrap;
+}
+
+#rto-status-display-table th:first-child,
+#rto-status-display-table td:first-child {
+    width: 35%;
+    white-space: normal;
+}
+
+#rto-status-display-table th {
+    border-bottom-width: 2px;
+    border-bottom-color: #005587; /* Cognizant blue accent */
+}
+
+#rto-status-display-table th:not(:first-child) {
+    text-align: center;
+}
+
+#rto-status-display-table tbody td:not(:first-child) {
+    text-align: center;
+}
+
+#rto-status-display-table tbody tr:hover {
+    background-color: #f1f8ff; /* A very light blue for hover */
+}
+
+#rto-status-display-table td:first-child {
+    font-weight: 500;
+    color: #333;
+    text-align: left;
+}
+
+.status-display-table,
+#rto-table,
+#user-list-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.5em;
+    font-size: 0.95rem;
+}
+
+.status-display-table th, .status-display-table td,
+#rto-table th, #rto-table td,
+#user-list-table th, #user-list-table td {
+    border-left: none;
+    border-right: none;
+    border-top: 1px solid #e9ecef;
+    padding: 12px 15px;
+    text-align: left;
+}
+
+.status-display-table th,
+#rto-table th,
+#user-list-table th {
+    background-color: #eaf6ff; /* A more distinct but light blue header */
+    color: #0d2240;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+.status-display-table th:first-child, .status-display-table td:first-child {
+    border-left: none;
+}
+
+.status-display-table tbody tr:nth-child(even),
+#rto-table tbody tr:nth-child(even),
+#user-list-table tbody tr:nth-child(even) {
+    background-color: #f8fcff; /* A very subtle blue for alternating rows */
+}
+
+/* Generic hover for tables that don't have special coloring */
+#rto-history-table tbody tr:hover,
+#rto-table tbody tr:hover,
+#user-list-table tbody tr:hover {
+    background-color: #e9ecef;
+}
+
+/* --- Table Controls (Search Bar) --- */
+.table-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.table-controls input {
+    padding: 10px 15px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    flex-grow: 1;
+    min-width: 250px;
+    box-sizing: border-box;
+}
+
+.table-controls .action-button {
+    flex-shrink: 0;
+}
+
+/* --- User Management Layout --- */
+.user-management-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.user-management-header h2 {
+    margin: 0;
+}
+
+.user-management-layout {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+#user-registration-section {
+    flex: 0 0 380px; /* Don't grow, don't shrink, base width 380px */
+    transition: flex-basis 0.4s ease, opacity 0.3s ease, padding 0.4s ease, margin 0.4s ease;
+}
+
+#user-registration-section.is-collapsed {
+    flex-basis: 0;
+    padding: 0;
+    margin: 0;
+    border: none;
+    opacity: 0;
+    overflow: hidden;
+    min-width: 0; /* Prevents content from breaking flexbox sizing */
+}
+
+#user-list-section {
+    flex: 1 1 auto; /* Grow and shrink */
+    min-width: 0; /* Prevents the user list from pushing the layout when the table is wide */
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+/* --- User Management Table Actions --- */
+.actions-header,
+.actions-cell {
+    width: 1%;
+    white-space: nowrap;
+    min-width: 180px;
+    text-align: center;
+}
+
+.actions-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+.actions-container .action-button {
+    margin: 0;
+    flex: 0 1 auto;
+}
+/* --- Sortable Table Headers --- */
+.sortable {
+    cursor: pointer;
+    position: relative;
+    padding-right: 25px !important; /* Space for the sort icon */
+}
+
+.sortable:hover {
+    background-color: #dceefc; /* A slightly darker blue on hover */
+}
+
+.sortable::after {
+    content: '';
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    margin-top: -7px;
+    border: 5px solid transparent;
+    opacity: 0.3;
+    border-bottom-color: #0d2240; /* Default to down arrow */
+}
+
+.sortable.sort-asc::after { opacity: 1; }
+.sortable.sort-desc::after { opacity: 1; transform: rotate(180deg); }
+
+/* --- Status Color Coding --- */
+#rto-summary-display-table .status-completed {
+    background-color: #d4edda;
+    color: #155724;
+}
+#rto-summary-display-table .status-completed td {
+    font-weight: 500;
+}
+#rto-summary-display-table .status-completed:hover {
+    background-color: #c3e6cb; /* Darker green */
+}
+
+#rto-summary-display-table .status-pending-business {
+    background-color: #fff3cd;
+    color: #856404;
+}
+#rto-summary-display-table .status-pending-business:hover {
+    background-color: #ffeeba; /* Darker yellow */
+}
+
+#rto-summary-display-table .status-pending-it {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+#rto-summary-display-table .status-pending-it:hover {
+    background-color: #bee5eb; /* Darker blue */
+}
+
+.dashboard-card .status-display-table {
+    margin-top: 0; /* Remove top margin as card padding handles it */
+    border: none;
+}
+
+.dashboard-card .status-display-table th, .dashboard-card .status-display-table td {
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+}
+
+.dashboard-card .status-display-table th {
+    border-top: none;
+}
+.dashboard-card .status-display-table tr:last-child td, .dashboard-card .status-display-table tfoot tr td {
+    border-bottom: none;
+}
+
+.status-display-table tfoot .grand-total-row,
+.status-display-table tfoot tr,
+.status-upload-table .grand-total-row {
+    color: #0d2240;
+    border-top: 2px solid #005587;
+}
+
+#rto-status-display-table tfoot .grand-total-row td {
+    font-size: 1.1em;
+    background-color: #e0e5e9; /* Slightly darker for more contrast */
+    text-align: center;
+}
+
+#rto-status-display-table tfoot .grand-total-row td:first-child {
+    text-align: left;
+    font-weight: 700;
+}
+
+#rto-status-display-table tfoot .grand-total-row td.is-total {
+    font-weight: 700; /* Bold for non-zero totals */
+}
+
+#rto-status-display-table tfoot .grand-total-row td.is-zero {
+    font-weight: 400; /* Explicitly normal weight */
+    color: #6c757d; /* A muted grey color */
+}
+
+.status-upload-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.status-upload-table td, .status-upload-table th {
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+.status-upload-table input {
+    width: 90%;
+    text-align: center;
+    margin: 0 auto;
+    padding: 8px;
+}
+
+.action-button {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    margin: 0 5px 0 0;
+}
+
+.action-button.delete {
+    background-color: #dc3545;
+}
+.action-button.delete:hover {
+    background-color: #c82333;
+}
+
+.action-button.delete.confirm-delete {
+    background-color: #d9534f;
+    color: #fff;
+    border-color: #d43f3a;
+}
+
+.action-button.edit {
+    background-color: #ffc107;
+    color: #212529;
+}
+.action-button.edit:hover {
+    background-color: #e0a800;
+}
+
+.action-button.secondary {
+    background-color: #6c757d;
+    color: #fff;
+}
+.action-button.secondary:hover {
+    background-color: #5a6268;
+}
+
+/* --- Profile Menu in Header --- */
+.header-right {
+    position: relative;
+}
+
+#profile-icon {
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #d0e9f8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+#profile-icon:hover {
+    background-color: #b9dff5;
+}
+
+#profile-icon svg {
+    width: 24px;
+    height: 24px;
+    color: #0033a0;
+}
+
+#profile-dropdown {
+    position: absolute;
+    top: 55px;
+    right: 0;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    width: 280px;
+    z-index: 1001;
+    border: 1px solid #e0e0e0;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+#profile-dropdown.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+#profile-dropdown p#welcome-message {
+    margin: 0;
+    font-weight: 600;
+    color: #0d2240;
+    line-height: 1.3;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+#profile-dropdown .dropdown-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    color: #dc3545; /* Red for emphasis */
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 0;
+    margin: 0;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+#profile-dropdown .dropdown-item:hover {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* --- Status & Error Messages --- */
+.error-message,
+#login-error {
+    color: #dc3545;
+    margin-top: 20px;
+    font-weight: 500;
+    min-height: 1.2em; /* Prevent layout shift */
+}
+
+.status-message {
+    margin-top: 10px;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.status-message.success {
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+}
+
+.status-message.error-message {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+}
+
+/* --- Modal Styles --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 20px 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    width: 90%;
+    max-width: 400px;
+}
+
+.modal-content.large {
+    max-width: 90vw;
+    width: 1200px;
+}
+
+.modal-content h3 {
+    margin-top: 0;
+    color: #0d2240;
+}
+
+.modal-content p strong {
+    color: #0d2240;
+}
+
+.modal-content form button {
+    display: inline-block;
+    width: auto;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+.modal-actions {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e9ecef;
+    text-align: right;
+}
+
+/* --- Skeleton Loader --- */
+tbody[id$="-skeleton"] td {
+    padding: 12px 15px;
+}
+
+#rto-status-display-skeleton td {
+    /* This table has smaller padding */
+    padding: 8px 12px;
+}
+
+.skeleton-bar {
+    width: 100%;
+    height: 1em;
+    background-color: #e9ecef;
+    border-radius: 4px;
+    animation: shimmer 1.5s infinite linear;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e9ecef 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 1200px) {
+    .user-management-layout {
+        flex-direction: column;
+    }
+    #user-registration-section {
+        flex-basis: auto;
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .login-card { max-width: 420px; }
+}
+
+/* --- Global Popup --- */
+#global-popup {
+    position: fixed;
+    top: -100px; /* Start off-screen */
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 15px 25px;
+    border-radius: 8px;
+    background-color: #28a745; /* Green for success */
+    color: white;
+    font-size: 1.1rem;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    z-index: 2000;
+    opacity: 0;
+    transition: opacity 0.5s, top 0.5s;
+}
+
+#global-popup.show {
+    top: 50px;
+    opacity: 1;
+}
+
+#global-popup.error {
+    background-color: #d9534f; /* Red for error */
+}
+
+/* --- Pagination --- */
+.pagination-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e9ecef;
+}
+
+.pagination-controls button {
+    margin: 0;
+}
+
+.pagination-controls button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* --- Footer --- */
+footer {
+    text-align: center;
+    padding: 1.5rem 0;
+    background: transparent;
+    color: #6c757d;
+    margin-top: auto; /* Pushes footer to the bottom */
+    font-size: 0.9rem;
+    border-top: 1px solid #d0e9f8; /* A slightly darker blue for separation */
+}
